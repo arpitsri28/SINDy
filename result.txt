@@ -1,0 +1,138 @@
+SINDy Results Summary
+================================================================================
+
+Summary Table
+--------------------------------------------------------------------------------
+ noise_level                          library  active_terms_x_dot  active_terms_v_dot  x_dot_support_correct  v_dot_support_correct  full_system_correct  coef_error_x_dot  coef_error_v_dot  coef_error_total
+        0.00              Polynomial degree 3                   1                   2                   True                   True                 True          0.000033          0.000037          0.000036
+        0.00       Polynomial degree 3 + trig                   1                   2                   True                   True                 True          0.000033          0.000037          0.000036
+        0.00        Polynomial degree 3 + exp                   1                   2                   True                   True                 True          0.000033          0.000037          0.000036
+        0.00 Polynomial degree 3 + trig + exp                   1                   2                   True                   True                 True          0.000033          0.000037          0.000036
+        0.01              Polynomial degree 3                   1                   2                   True                   True                 True          0.000394          0.000996          0.000909
+        0.01       Polynomial degree 3 + trig                   1                   2                   True                   True                 True          0.000394          0.000996          0.000909
+        0.01        Polynomial degree 3 + exp                   1                   2                   True                   True                 True          0.000394          0.000996          0.000909
+        0.01 Polynomial degree 3 + trig + exp                   1                  13                   True                  False                False          0.000394          1.224670          1.096465
+        0.05              Polynomial degree 3                   1                   2                   True                   True                 True          0.000266          0.000469          0.000436
+        0.05       Polynomial degree 3 + trig                   4                   5                  False                  False                False          1.211616          0.357558          0.627498
+        0.05        Polynomial degree 3 + exp                   1                   2                   True                   True                 True          0.000266          0.000469          0.000436
+        0.05 Polynomial degree 3 + trig + exp                  13                   9                  False                  False                False          6.222095          1.726139          3.173298
+        0.10              Polynomial degree 3                   1                   2                   True                   True                 True          0.000386          0.002134          0.001918
+        0.10       Polynomial degree 3 + trig                   1                   4                   True                  False                False          0.000386          0.313317          0.280517
+        0.10        Polynomial degree 3 + exp                   1                   2                   True                   True                 True          0.000386          0.002134          0.001918
+        0.10 Polynomial degree 3 + trig + exp                   8                   6                  False                  False                False          5.483320          0.168465          2.447117
+
+Recovered Equations
+--------------------------------------------------------------------------------
+
+Noise level: 0.0
+Library: Polynomial degree 3
+x_dot = 0.999967*v
+v_dot = -1.999927*x + -0.199986*v
+
+--------------------------------------------------------------------------------
+
+Noise level: 0.0
+Library: Polynomial degree 3 + trig
+x_dot = 0.999967*v
+v_dot = -1.999927*x + -0.199986*v
+
+--------------------------------------------------------------------------------
+
+Noise level: 0.0
+Library: Polynomial degree 3 + exp
+x_dot = 0.999967*v
+v_dot = -1.999927*x + -0.199986*v
+
+--------------------------------------------------------------------------------
+
+Noise level: 0.0
+Library: Polynomial degree 3 + trig + exp
+x_dot = 0.999967*v
+v_dot = -1.999927*x + -0.199986*v
+
+--------------------------------------------------------------------------------
+
+Noise level: 0.01
+Library: Polynomial degree 3
+x_dot = 0.999606*v
+v_dot = -2.001951*x + -0.200446*v
+
+--------------------------------------------------------------------------------
+
+Noise level: 0.01
+Library: Polynomial degree 3 + trig
+x_dot = 0.999606*v
+v_dot = -2.001951*x + -0.200446*v
+
+--------------------------------------------------------------------------------
+
+Noise level: 0.01
+Library: Polynomial degree 3 + exp
+x_dot = 0.999606*v
+v_dot = -2.001951*x + -0.200446*v
+
+--------------------------------------------------------------------------------
+
+Noise level: 0.01
+Library: Polynomial degree 3 + trig + exp
+x_dot = 0.999606*v
+v_dot = -0.221990*1 + -2.217203*x + -0.225207*v + 1.153159*x^2 + -0.253468*v^2 + 0.366787*x^3 + -0.067256*v^3 + 1.224880*sin(x) + 1.322288*cos(x) + -0.185156*sin(v) + -0.309788*cos(v) + -1.002972*exp(x) + 0.210030*exp(v)
+
+--------------------------------------------------------------------------------
+
+Noise level: 0.05
+Library: Polynomial degree 3
+x_dot = 1.000266*v
+v_dot = -2.000884*x + -0.200328*v
+
+--------------------------------------------------------------------------------
+
+Noise level: 0.05
+Library: Polynomial degree 3 + trig
+x_dot = -0.847952*x + 1.000942*v + 0.124128*x^3 + 0.856494*sin(x)
+v_dot = 0.427013*1 + -1.991028*x + -0.172928*x^2 + -0.425588*cos(x) + -0.288193*sin(v)
+
+--------------------------------------------------------------------------------
+
+Noise level: 0.05
+Library: Polynomial degree 3 + exp
+x_dot = 1.000266*v
+v_dot = -2.000884*x + -0.200328*v
+
+--------------------------------------------------------------------------------
+
+Noise level: 0.05
+Library: Polynomial degree 3 + trig + exp
+x_dot = 0.550257*1 + 0.968289*x + 1.048775*v + -2.799049*x^2 + 0.419285*v^2 + -0.972711*x^3 + 0.110444*v^3 + -3.437041*sin(x) + -3.183567*cos(x) + 0.296154*sin(v) + 0.510502*cos(v) + 2.467061*exp(x) + -0.346165*exp(v)
+v_dot = -0.090050*1 + -2.803257*x + 1.463869*x^2 + 0.545588*x^3 + 2.074516*sin(x) + 1.710069*cos(x) + -0.225018*cos(v) + -1.267878*exp(x) + -0.131915*exp(v)
+
+--------------------------------------------------------------------------------
+
+Noise level: 0.1
+Library: Polynomial degree 3
+x_dot = 0.999614*v
+v_dot = -2.004163*x + -0.201031*v
+
+--------------------------------------------------------------------------------
+
+Noise level: 0.1
+Library: Polynomial degree 3 + trig
+x_dot = 0.999614*v
+v_dot = -1.557789*x + -0.201301*v + -0.067593*x^3 + -0.443255*sin(x)
+
+--------------------------------------------------------------------------------
+
+Noise level: 0.1
+Library: Polynomial degree 3 + exp
+x_dot = 0.999614*v
+v_dot = -2.004163*x + -0.201031*v
+
+--------------------------------------------------------------------------------
+
+Noise level: 0.1
+Library: Polynomial degree 3 + trig + exp
+x_dot = 0.536820*1 + 1.294565*x + 0.999771*v + -2.298051*x^2 + -0.877747*x^3 + -3.346601*sin(x) + -2.582399*cos(x) + 2.045169*exp(x)
+v_dot = -1.757160*x + -0.201342*v + 0.115597*x^2 + -0.128075*sin(x) + 0.113408*cos(x) + -0.114263*exp(x)
+
+--------------------------------------------------------------------------------
+

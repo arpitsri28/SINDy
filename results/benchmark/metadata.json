@@ -1,0 +1,51 @@
+{
+  "recorded_at_utc": "2026-10-15T21:34:53.398831+00:00",
+  "python": "3.9.6",
+  "platform": "macOS-26.5.2-arm64-arm-64bit",
+  "machine": "arm64",
+  "processor": "arm",
+  "logical_cpus": 8,
+  "numpy": "1.26.3",
+  "scipy": "1.12.0",
+  "threadpools": [
+    {
+      "user_api": "blas",
+      "internal_api": "openblas",
+      "num_threads": 8,
+      "prefix": "libopenblas",
+      "filepath": "/Users/arpitsrivastav/Desktop/SINDy/.venv/lib/python3.9/site-packages/numpy/.dylibs/libopenblas64_.0.dylib",
+      "version": "0.3.23.dev",
+      "threading_layer": "pthreads",
+      "architecture": "armv8"
+    },
+    {
+      "user_api": "blas",
+      "internal_api": "openblas",
+      "num_threads": 8,
+      "prefix": "libopenblas",
+      "filepath": "/Users/arpitsrivastav/Desktop/SINDy/.venv/lib/python3.9/site-packages/scipy/.dylibs/libopenblas.0.dylib",
+      "version": "0.3.21.dev",
+      "threading_layer": "pthreads",
+      "architecture": "armv8"
+    },
+    {
+      "user_api": "openmp",
+      "internal_api": "openmp",
+      "num_threads": 8,
+      "prefix": "libomp",
+      "filepath": "/Users/arpitsrivastav/Desktop/SINDy/.venv/lib/python3.9/site-packages/sklearn/.dylibs/libomp.dylib",
+      "version": null
+    }
+  ],
+  "notebook_sha256": "8d209d7bf1ab24d1511c00e67b1c69630a9fc1fa36547bfb36310cbe6b46b836",
+  "warmups_per_degree": 3,
+  "measured_runs_per_degree": 25,
+  "samples": 50000,
+  "threshold": 0.1,
+  "noise": 0,
+  "timer": "time.perf_counter",
+  "order": "seed-42 shuffled degrees per repeat",
+  "timed_scope": "library construction + STLS; excludes data generation and metrics",
+  "degree2_fraction_of_degree3": 0.48600380429756784,
+  "degree2_speedup_over_degree3": 2.057597062322017
+}

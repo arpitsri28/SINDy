@@ -5,7 +5,7 @@ From-scratch sparse equation discovery: a quadratic library matches larger libra
 ## Key result
 
 In the archived sweep, the **degree-2 library recovers exact support at noise standard deviations 0, 0.01, and 0.1**, matching degrees 3–5 in the seed-42 sweep. Its relative coefficient error at 0.1 is **0.002088**.
-The saved clean-data benchmark takes **0.017 s versus 0.050 s** for degree 3: about **2.94× faster**, with both recovering exact support.
+In a fresh clean-data benchmark with **3 warmups and 25 measured runs per degree**, degree 2 takes a median **0.04138 s versus 0.08514 s** for degree 3: **48.6% of degree-3 runtime (2.06× faster)**, with both recovering exact support in every measured run. See the [raw timings](results/benchmark/timings.csv) and [environment metadata](results/benchmark/metadata.json).
 There are three example systems, but only Lorenz has a saved PySINDy comparison. The implemented sweep is **degrees 1–5**, not 1–6.
 
 ![Lorenz support recovery and relative coefficient error across polynomial degree and measurement noise](assets/lorenz_sweep.png)
@@ -77,7 +77,19 @@ The notebook times **one clean-data run per degree** with `time.time()`, includi
 | 4 | 35 | 0.1890 | Yes |
 | 5 | 56 | 0.3970 | Yes |
 
-The ratio 0.0500/0.0170 ≈ 2.94 does not support the resume's 3.4× claim. There are no warmups, repetitions, or saved hardware details.
+The archived ratio 0.0500/0.0170 ≈ 2.94 does not support the resume's 3.4× claim. That original timing has no warmups, repetitions, or saved hardware details.
+
+The repeated benchmark uses the notebook's unchanged clean trajectory, analytic derivatives, library builder, and STLS solver. Each degree receives 3 untimed warmups followed by 25 measured runs. Degrees are interleaved in a seed-42 shuffled order each round. `time.perf_counter()` measures library construction plus STLS; trajectory generation, metrics, and support checks are excluded. Every measured degree-2–5 fit recovers exact support.
+
+| Degree | Candidate terms | Median seconds | Interquartile range (s) | Exact support in all 25 runs |
+|---|---:|---:|---:|---|
+| 1 | 4 | 0.017605 | 0.016142–0.019706 | No |
+| 2 | 10 | 0.041380 | 0.038478–0.044459 | Yes |
+| 3 | 20 | 0.085144 | 0.078124–0.103443 | Yes |
+| 4 | 35 | 0.226380 | 0.177059–0.263552 | Yes |
+| 5 | 56 | 0.801621 | 0.631737–1.003778 | Yes |
+
+The ratio of degree-2 to degree-3 medians is **0.4860**, or **48.6%**; its reciprocal is **2.06×**. These are measurements on this macOS ARM64 environment, not a universal speedup. [Raw timings](results/benchmark/timings.csv), [summary](results/benchmark/summary.csv), and [metadata including numerical library thread settings](results/benchmark/metadata.json) are saved separately from the archived results. The interquartile ranges describe run-to-run timing spread, not confidence intervals.
 
 At noise 1, the degree-2 threshold diagnostic tries 0.05, 0.1, 0.2, 0.5, 1, and 2; none recovers exact support. The main grid keeps threshold 0.1 fixed.
 
@@ -98,7 +110,7 @@ The Lotka–Volterra notebook adds noise directly to analytic derivatives, a dif
 
 ## Limitations and next steps
 
-One trajectory and one seed per cell limit generalization. Finite differences amplify noise; high-degree columns can be poorly conditioned. No held-out trajectories or weak/ensemble SINDy comparisons. Next: paired multi-seed sweeps, repeated timings, and controlled derivative-estimator comparisons.
+One trajectory and one seed per cell limit generalization. Finite differences amplify noise; high-degree columns can be poorly conditioned. No held-out trajectories or weak/ensemble SINDy comparisons. Timings are repeated on one machine. Next: paired multi-seed sweeps and controlled derivative-estimator comparisons.
 
 ## Reproduce it
 
@@ -110,9 +122,10 @@ source .venv/bin/activate
 python -m pip install -r requirements.txt
 python scripts/reproduce.py plot  # regenerate the README figure from saved output
 python scripts/reproduce.py run   # execute the original Lorenz experiment
+python scripts/reproduce.py benchmark --warmups 3 --repeats 25  # repeated clean timings
 ```
 
-Fresh logs, CSV, figure, environment metadata, and a numerical PySINDy diagnostic go to `results/reproduced/`. The [verified full run](results/verification/metadata.json) took **77 s** on macOS ARM64; allow longer on other machines.
+Fresh logs, CSV, figure, environment metadata, and a numerical PySINDy diagnostic go to `results/reproduced/`. Repeated benchmark timings, summary, and environment metadata go to `results/benchmark/`; the benchmark enforces at least 1 warmup and 20 measured runs per degree. The [verified full run](results/verification/metadata.json) took **77 s** on macOS ARM64; allow longer on other machines.
 
 <details>
 <summary>Other notebooks and missing inputs</summary>
@@ -136,6 +149,7 @@ result.txt                   # Saved oscillator equations and metrics
 scripts/reproduce.py         # Archived plot export and fresh Lorenz execution
 results/archived/            # Sweep exported from saved notebook output
 results/verification/        # Fresh log, metrics, and environment for this README
+results/benchmark/           # Raw repeated timings, medians, and environment
 assets/lorenz_sweep.png       # Main figure
 requirements.txt             # Tested numerical and plotting dependencies
 ```

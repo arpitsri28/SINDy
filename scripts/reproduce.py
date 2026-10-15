@@ -1,11 +1,13 @@
-"""Plot archived Lorenz output or rerun its original code without a notebook UI.
+"""Plot, rerun, or repeatedly benchmark Lorenz code without a notebook UI.
 
 The notebook remains the algorithm source. Archived and fresh results are kept
-separate: rerunning cannot overwrite the evidence used in the README.
+separate; repeated timings are saved in results/benchmark/.
 """
 import argparse
+import ast
 import contextlib
 import csv
+from datetime import datetime, timezone
 import hashlib
 import io
 import json
@@ -84,11 +86,97 @@ def plot(rows, path, provenance):
     plt.close(fig)
 
 
+def benchmark(notebook, repeats, warmups):
+    """Time the notebook's clean-data library construction and STLS unchanged."""
+    import numpy as np
+    import scipy
+    from threadpoolctl import threadpool_info
+
+    source = '\n\n'.join(''.join(c['source']) for c in notebook['cells']
+                         if c['cell_type'] == 'code' and not ''.join(c['source']).lstrip().startswith('%'))
+    tree = ast.parse(source)
+    # Execute original data generation and function definitions, stopping before
+    # the baseline fit, PySINDy comparison, and noise sweep.
+    stop = next(i for i, node in enumerate(tree.body)
+                if isinstance(node, ast.Assign)
+                and any(isinstance(target, ast.Tuple)
+                        and any(isinstance(name, ast.Name) and name.id == 'Theta2'
+                                for name in target.elts) for target in node.targets))
+    tree.body = tree.body[:stop]
+    namespace = {'__name__': '__main__'}
+    with contextlib.redirect_stdout(io.StringIO()):
+        exec(compile(tree, str(NOTEBOOK), 'exec'), namespace)
+    build = namespace['build_library']
+    fit = namespace['run_sindy']
+    X, Xdot = namespace['X'], namespace['Xdot']
+    degrees = [1, 2, 3, 4, 5]
+
+    def measure(degree):
+        start = time.perf_counter()
+        theta, labels = build(X, degree)
+        coefficients = fit(theta, Xdot, threshold=0.1)
+        elapsed = time.perf_counter() - start
+        # Metrics and validation are outside the timed region.
+        support = namespace['check_support'](namespace['get_true_coefficients'](labels), coefficients)
+        if degree >= 2 and not support:
+            raise ValueError(f'Clean support recovery failed for degree {degree}')
+        return dict(degree=degree, library_size=theta.shape[1],
+                    seconds=elapsed, support_correct=bool(support))
+
+    for _ in range(warmups):
+        for degree in degrees:
+            measure(degree)
+    rows = []
+    rng = np.random.default_rng(42)
+    for repeat in range(1, repeats + 1):
+        # Interleave degrees in a reproducible shuffled order to reduce order bias.
+        for order, degree in enumerate(rng.permutation(degrees), start=1):
+            rows.append(dict(repeat=repeat, order=order, **measure(int(degree))))
+    summary = []
+    for degree in degrees:
+        samples = [r for r in rows if r['degree'] == degree]
+        times = [r['seconds'] for r in samples]
+        summary.append(dict(degree=degree, library_size=samples[0]['library_size'],
+                            runs=repeats, median_seconds=float(np.median(times)),
+                            q25_seconds=float(np.quantile(times, 0.25)),
+                            q75_seconds=float(np.quantile(times, 0.75)),
+                            support_correct=all(r['support_correct'] for r in samples)))
+    ratio = summary[1]['median_seconds'] / summary[2]['median_seconds']
+    metadata = dict(recorded_at_utc=datetime.now(timezone.utc).isoformat(),
+                    python=platform.python_version(), platform=platform.platform(),
+                    machine=platform.machine(), processor=platform.processor(),
+                    logical_cpus=os.cpu_count(), numpy=np.__version__, scipy=scipy.__version__,
+                    threadpools=threadpool_info(),
+                    notebook_sha256=hashlib.sha256(NOTEBOOK.read_bytes()).hexdigest(),
+                    warmups_per_degree=warmups, measured_runs_per_degree=repeats,
+                    samples=len(X), threshold=0.1, noise=0,
+                    timer='time.perf_counter', order='seed-42 shuffled degrees per repeat',
+                    timed_scope='library construction + STLS; excludes data generation and metrics',
+                    degree2_fraction_of_degree3=ratio, degree2_speedup_over_degree3=1 / ratio)
+    folder = ROOT / 'results' / 'benchmark'
+    folder.mkdir(parents=True, exist_ok=True)
+    save_csv(rows, folder / 'timings.csv')
+    save_csv(summary, folder / 'summary.csv')
+    (folder / 'metadata.json').write_text(json.dumps(metadata, indent=2) + '\n')
+    for row in summary:
+        print(f"Degree {row['degree']}: median {row['median_seconds']:.6f} s "
+              f"(IQR {row['q25_seconds']:.6f}–{row['q75_seconds']:.6f} s)")
+    print(f'Degree 2 uses {ratio:.2%} of degree-3 runtime ({1 / ratio:.2f}x faster).')
+    print(f'Saved raw timings, summary, and metadata to {folder.relative_to(ROOT)}')
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('action', choices=['plot', 'run'])
+    parser.add_argument('action', choices=['plot', 'run', 'benchmark'])
+    parser.add_argument('--repeats', type=int, default=25)
+    parser.add_argument('--warmups', type=int, default=3)
     args = parser.parse_args()
     notebook = json.loads(NOTEBOOK.read_text())
+    if args.action == 'benchmark':
+        if args.repeats < 20 or args.warmups < 1:
+            parser.error('benchmark requires at least 20 measured runs and 1 warmup per degree')
+        benchmark(notebook, args.repeats, args.warmups)
+        return
     if args.action == 'plot':
         output = ''.join(''.join(o.get('text', [])) for cell in notebook['cells']
                          for o in cell.get('outputs', []) if o['output_type'] == 'stream')

@@ -30,10 +30,8 @@ No ridge penalty or normalization. Known Lorenz equations make recovery measurab
 **Support recovery:** exact equality of true/recovered masks at $|\Xi_{ij}| > 10^{-6}$. **Relative coefficient error:** $\|\Xi-\Xi_{true}\|_F / \|\Xi_{true}\|_F$, measuring accuracy beyond term selection.
 
 <details>
-<summary>Implementation choices needing context</summary>
+<summary>Implementation details</summary>
 
-- `TODO(me):` Explain your reason for implementing STLS from scratch.
-- `TODO(me):` Explain the choice of threshold 0.1 and the degree/noise grid; the code records values but no rationale.
 - The oscillator uses `< threshold`, at most 10 iterations, and a support-stability stop. Lotka–Volterra uses `<= threshold` and 10 iterations without early stopping. Neither normalizes columns or adds regularization.
 - The degree-1 Lorenz reference omits the unavailable quadratic coefficients. Its reported error is against that truncated matrix, not the complete Lorenz system.
 
@@ -52,7 +50,7 @@ These are **saved observations**, not a three-system numerical agreement test:
 <details>
 <summary>Validation gap</summary>
 
-`TODO(me):` Supply the claimed three-system PySINDy validation and its numerical agreement tolerance, or revise that claim. The Lorenz notebook compares printed equations only; custom STLS uses analytic derivatives while PySINDy estimates derivatives internally and leaves optimizer defaults in place.
+The Lorenz notebook compares printed equations only; custom STLS uses analytic derivatives while PySINDy estimates derivatives internally and leaves optimizer defaults in place.
 
 </details>
 
@@ -79,7 +77,7 @@ The notebook times **one clean-data run per degree** with `time.time()`, includi
 | 4 | 35 | 0.1890 | Yes |
 | 5 | 56 | 0.3970 | Yes |
 
-The ratio 0.0500/0.0170 ≈ 2.94 does not support the resume's 3.4× claim. There are no warmups, repetitions, or saved hardware details. `TODO(me):` Record the original benchmark environment, or provide the separate measurements supporting 3.4×.
+The ratio 0.0500/0.0170 ≈ 2.94 does not support the resume's 3.4× claim. There are no warmups, repetitions, or saved hardware details.
 
 At noise 1, the degree-2 threshold diagnostic tries 0.05, 0.1, 0.2, 0.5, 1, and 2; none recovers exact support. The main grid keeps threshold 0.1 fixed.
 
@@ -121,7 +119,7 @@ Fresh logs, CSV, figure, environment metadata, and a numerical PySINDy diagnosti
 
 The helper runs the original Lorenz code, skipping its unpinned `%pip install pysindy` cell. It checks clean custom support and reports the PySINDy coefficient difference without inventing a historical acceptance tolerance. Lotka–Volterra can be run interactively with the same numerical dependencies; a notebook UI is not included in requirements.
 
-`TODO(me):` Restore the four `damped_oscillator_data*.csv` inputs and their generation/noise procedure. The oscillator cannot currently be rerun; it also overwrites `result.txt` when executed.
+The oscillator cannot currently be rerun; it also overwrites `result.txt` when executed.
 
 </details>
 

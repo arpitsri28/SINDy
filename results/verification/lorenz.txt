@@ -1,0 +1,94 @@
+Data generated: 50000 time steps, 3 variables
+
+
+Baseline, SINDy on Lorenz, degree 2, no noise
+  dx/dt = -10.0000*x +10.0000*y
+  dy/dt = +28.0000*x -1.0000*y -1.0000*xz
+  dz/dt = -2.6667*z +1.0000*xy
+
+True Lorenz equations:
+  dx/dt = -10*x + 10*y
+  dy/dt = +28*x - 1*y - 1*xz
+  dz/dt = -2.6667*z + 1*xy
+
+
+PySINDy
+(x0)' = -10.000 x0 + 10.000 x1
+(x1)' = 27.998 x0 + -1.000 x1 + -1.000 x0 x2
+(x2)' = -2.667 x2 + 1.000 x0 x1
+
+
+Library experiement
+
+Deg   Noise    Terms   Coeff Err    Support
+1     0.00     4       1.354733     false
+1     0.01     4       1.354710     false
+1     0.10     4       1.354120     false
+1     1.00     4       1.308047     false
+1     5.00     4       1.259281     false
+2     0.00     10      0.000000     true
+2     0.01     10      0.000066     true
+2     0.10     10      0.002329     true
+2     1.00     10      0.934566     false
+2     5.00     10      2.873740     false
+3     0.00     20      0.000000     true
+3     0.01     20      0.000066     true
+3     0.10     20      0.002329     true
+3     1.00     20      0.668003     false
+3     5.00     20      2.909420     false
+4     0.00     35      0.000000     true
+4     0.01     35      0.000066     true
+4     0.10     35      0.002329     true
+4     1.00     35      0.668003     false
+4     5.00     35      2.963435     false
+5     0.00     56      0.000000     true
+5     0.01     56      2.104239     false
+5     0.10     56      0.002329     true
+5     1.00     56      0.668003     false
+5     5.00     56      2.937562     false
+
+
+Seed analysis: Degree 5, Noise=0.01
+  seed=0: support=true, error=0.0001
+  seed=1: support=true, error=0.0001
+  seed=2: support=true, error=0.0000
+  seed=42: support=false, error=2.1042
+  seed=99: support=false, error=1.6315
+
+
+Failing classes
+
+Deg 5, noise=0.01 — fail
+  dx/dt = -9.9996*x +9.9997*y
+    (2 active terms)
+  dy/dt = +2.9199*1 -7.2950*x +20.7750*y -0.6240*yz
+    (4 active terms)
+  dz/dt = -51.2579*1 +0.1690*x -0.1785*y +3.8420*z +1.0239*xx +0.2474*yy -0.1968*zz
+    (7 active terms)
+
+Deg 2, noise=1.0 — fail
+  dx/dt = -0.1792*1 -8.9340*x +9.0867*y
+    (3 active terms)
+  dy/dt = +1.1187*1 +14.4730*x +6.7569*y -0.6202*xz -0.2130*yz
+    (5 active terms)
+  dz/dt = +24.7031*1 +0.3025*x -0.2462*y -5.9774*z -0.4823*xx +1.2749*xy +0.1059*zz
+    (7 active terms)
+
+
+time
+Degree   Terms    Time (s)     Support
+1        4        0.0182       false
+2        10       0.0388       true
+3        20       0.0797       true
+4        35       0.5110       true
+5        56       1.1315       true
+
+
+Threshold test: Degree 2, Noise=1.0
+λ        Coeff Err    Active Terms   Support
+0.05     0.9722       21             false
+0.1      0.9346       15             false
+0.2      0.6680       13             false
+0.5      0.1923       8              false
+1.0      1.3057       4              false
+2.0      1.3057       4              false

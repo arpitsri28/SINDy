@@ -1,0 +1,8 @@
+# Tested with Python 3.9.6; original notebooks did not pin dependencies.
+numpy==1.26.3
+scipy==1.12.0
+matplotlib==3.8.2
+pandas==2.1.4
+pysindy==1.7.5
+scikit-learn==1.6.1
+derivative==0.6.3

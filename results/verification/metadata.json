@@ -1,0 +1,14 @@
+{
+  "python": "3.9.6",
+  "platform": "macOS-26.5.2-arm64-arm-64bit",
+  "numpy": "1.26.3",
+  "scipy": "1.12.0",
+  "pysindy": "1.7.5",
+  "elapsed_seconds": 77.382998542,
+  "notebook_sha256": "8d209d7bf1ab24d1511c00e67b1c69630a9fc1fa36547bfb36310cbe6b46b836",
+  "pysindy_alpha": 0.05,
+  "pysindy_max_iter": 20,
+  "pysindy_normalize_columns": false,
+  "lorenz_pysindy_support_equal": true,
+  "lorenz_pysindy_max_abs_difference": 0.0020167401556925313
+}
